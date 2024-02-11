@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.devfun.settingweb_boot.dao.StatisticMapper">
+ 
+    <select id="selectYearLogin" parameterType="string" resultType="hashMap">
+        select totCnt monthCnt, postsCnt, yearMonthDay, dayCnt 
+        from statistc.requestinfo where yearMonthDay = #{year};
+    </select>
+    
+    <select id="departmentInfo" parameterType="string" resultType="hashMap">
+        select department, departmentCnt
+        from statistc.department where yearMonth = left(#{year}, 6);
+    </select>
+    
+    <select id="holidays" parameterType="string" resultType="hashMap">
+        SELECT SUM(loginReq) cnt FROM statistc.requestInfo WHERE yearMonthDay NOT IN (
+		    SELECT holiday
+		    FROM statistc.holidays
+		);
+    </select>
+    
+    <select id="avgLoginCnt" parameterType="string" resultType="hashMap">
+        select truncate(sum(loginReq) / count(yearMonthDay), 0) cnt
+        from statistc.requestinfo;
+    </select>
+    
+</mapper>
